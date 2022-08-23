@@ -2,22 +2,20 @@ import requests
 import sys
 import json
 import socket
-from cymruwhois import Client
 
-c = Client()
 ip = f'{sys.argv[1]}'
-
-pxkey = '! ProxyCheck.io API Key goes here !'
-apxkey = '! AbuseIPDB API Key goes here !'
-
-r = c.lookup(ip)
+############################################################################################
+pxkey = 'proxycheck.io key goes here'                                                      #
+apxkey = 'abuseipdb key goes here'                                                         #
+############################################################################################
 l = requests.get(f"http://ip-api.com/json/{ip}?fields=66846719").json()
+xs = l["as"].split()[0]
 
 try:
     x = open('asn-list.txt', 'r')
     f = x.read().splitlines()
-    asn = r.asn
-    if r.asn in f:
+    asn = xs
+    if xs in f:
         print(f'(asncomparison)\nPossible Proxy Detected! Info: \nIP: {ip} \nCountry: {l["country"]}, \nISP: {l["isp"]}, \nASN: {l["as"]}, \nRegion Name: {l["regionName"]}, \nCity: {l["city"]}')
         x.close()
     else:
@@ -41,9 +39,9 @@ try:
             if proxy == "yes":
                 print(f'(proxycheck)\nPossible Proxy Detected! Info: \nIP: {ip} \nCountry: {l["country"]}, \nISP: {l["isp"]}, \nASN: {l["as"]}, \nRegion Name: {l["regionName"]}, \nCity: {l["city"]}\n\nType: {iptype}\nAbuse Confidence Score: {score}\nTotal Reports: {reports}')
             elif iptype == "VPN":
-                print(f'(proxycheck)\nPossible VPN Detected! Info: \nIP: {ip} \nCountry: {l["country"]}, \nISP: {l["isp"]}, \nASN: {l["as"]}, \nRegion Name: {l["regionName"]}, \nCity: {l["city"]}\n\nType: {iptype}\nAbuse Confidence Score: {score}\Total Reports: {reports}')
+                print(f'(proxycheck)\nPossible VPN Detected! Info: \nIP: {ip} \nCountry: {l["country"]}, \nISP: {l["isp"]}, \nASN: {l["as"]}, \nRegion Name: {l["regionName"]}, \nCity: {l["city"]}\n\nType: {iptype}\nAbuse Confidence Score: {score}\nTotal Reports: {reports}')
             elif score > 5 or reports > 2:
-                print(f'(abuseipdb)\nPossible Malicious IP Detected! Info: \nIP: {ip} \nCountry: {l["country"]}, \nISP: {l["isp"]}, \nASN: {l["as"]}, \nRegion Name: {l["regionName"]}, \nCity: {l["city"]}\n\nType: {iptype}\nAbuse Confidence Score: {score}\Total Reports: {reports}')
+                print(f'(abuseipdb)\nPossible Malicious IP Detected! Info: \nIP: {ip} \nCountry: {l["country"]}, \nISP: {l["isp"]}, \nASN: {l["as"]}, \nRegion Name: {l["regionName"]}, \nCity: {l["city"]}\n\nType: {iptype}\nAbuse Confidence Score: {score}\nTotal Reports: {reports}')
             else:
                 print(f'No Proxy/VPN Detected. IP Info: \nCountry: {l["country"]}, \nISP: {l["isp"]}, \nASN: {l["as"]}, \nRegion Name: {l["regionName"]}, \nCity: {l["city"]}\n\nType: {iptype}\nAbuse Confidence Score: {score}\nTotal Reports: {reports}')
 
@@ -52,3 +50,4 @@ try:
             
 except Exception as e:
     print(f'An error has occured whilst checking `{ip}`\nInfo: `{e}`')
+
